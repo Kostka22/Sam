@@ -1,0 +1,242 @@
+---
+title: "law of accumulation of real errors"
+author: "Samuel Lebó"
+date: "18 6 2022"
+output:
+  word_document: default
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Obsah
+1.[Small talk]
+
+2.[Theory]
+
+2.[Theory]
+
+3.[More practical theory]
+
+4.[Example]
+
+5.[Derivative]
+
+6.[Calculations of partial derivatives]
+
+7.[Error vector]
+
+8.[The result]
+
+9.[Me]
+
+10.[Referentions]
+
+## Small talk
+
+**At every part of this document i am looking as surveyor, please be adviced**
+
+First of all we need to properly adress what is mean error and what is real error since we have two types of errors. But it would also be good to know why are we doing this. 
+
+In geodesy many times we encounter situations when we **can not measure value directly but we have to use some other metods**, for measuring this values we use other metods that are in direct relation to the values that interest us. Because the default values are affected by errors, these error also affect functions and end value.
+
+---First rule we gona take a look at is **law of accumulation of real errors**. This means that the error must be real and in surveyors field, it is not often to know real value of error since it is impossible to say if error for etc. of measured angle is 5 or 20 mgon so for this reason there is second law of errors calles **law of accumulation of medium errors**, but now back to real errors. 
+
+## Theory
+
+__law of accumulation of real errors__ 
+
+The Initial relationship is simple \[ x= f(l_1,l_2,...,l_n)=f(\mathbf l) \] 
+
+Scalar function **x** is function of n measured values grouped in vector **l**. Vector l include result of measurments \[ l_i (i=1,2...,n) \], which are independent of each other (uncorrelated). For real (teoretical) errors of \[ L_i \] measured values \[ l_i \] burdened with real errors \[ \epsilon_i \] applies : \[ L_i=l_i+\epsilon_i \] \[ \mathbf L= \mathbf l+ \mathbf \epsilon \]
+
+For real value of __X__ as function of real quantity of measured values Li applies : \[ X = x+\epsilon_x=f(\mathbf L)= f(L_1,L_2,...,L_n)=f(l_1+\epsilon_1,l_2+\epsilon_2,...,l_n+\epsilon_n) \] which then can be simplified as \[ X=f(l+\epsilon) \] where \[ \epsilon_x \] is the real error of value X a x is value of measured function.
+
+## More practical theory
+
+**Target**
+We want to know \[ \epsilon_x \] (real error) if we assume that real error of measurements are \[ \epsilon_1, \epsilon_2,...,\epsilon_n \].
+
+**assumption**
+If we want to know the real error \[ \epsilon_x \] of determined quantity X:
+  - Function __f__ has continuous partial derivations by every argument \[ l_i \].
+  - If real errors \[ \epsilon_x \] are compared to measured values \[ l_i \], they are relatively small.
+
+**Principle**
+Development of the function \[ f(L)=f(l+\epsilon) \] into Taylor series:
+
+\[ f(L)=f(l+\epsilon)= 
+\begin{eqnarray}
+f(l)+{\frac{1}{1!}}{\frac{\partial f(l)}{\partial l}}\epsilon+
+{\frac{1}{2!}}{\frac{\partial ^2 f(l)}{\partial l^2}}\epsilon^2+
+{\frac{1}{m!}}{\frac{\partial ^m f(l)}{\partial l^m}}\epsilon^m+
+O_(m+1)
+\end{eqnarray} \]
+
+We have used \[ \epsilon=L-l. \]
+
+Om+1 is the rest of the Taylor series after leaving first m elements.
+
+If the function f have more \[ L_i=l_i+\epsilon_i \] we can write this function as scalar sumation of vector argument \[ f(l+\epsilon) \], by Taylor series.
+
+\[ X = x+ \epsilon_x=
+\begin{eqnarray}
+f(L_1,L_2,...,L_n)=
+{\frac{\partial f(l_1,l_2,...,l_n)}{\partial l_1}}\epsilon_1+
+{\frac{\partial f(l_1,l_2,...,l_n)}{\partial l_2}}\epsilon_2+
+{\frac{\partial f(l_1,l_2,...,l_n)}{\partial l_n}}\epsilon_n
+\end{eqnarray} \]
+
+Than the law about real errors will be in vector state like this:
+
+\[
+\begin{eqnarray}
+\epsilon_x=
+{\frac{\partial f(l)}{\partial l^T}}\epsilon
+\end{eqnarray} \]
+
+## Example
+
+Now the moment we all awaited come, __EXAMPLE TIME__.
+
+We can use this example in surveyor fields for things like when we know two sides of triangle, one angle and we want to round these three values to two decimals and then we want to know the real value of third side c with and without rounded values, we can count the real error of this act.
+
+Let us get straight to it.
+
+We we given values of triangle and they are 
+\[ a=175.254,b=193.706,\gamma=45^\circ38´29´´\]
+
+Function that we gonna partially derivative is this :\[ c=f(a,b,\gamma)=\sqrt(a^2+b^2-2ab*cos\gamma)=f(l) \]
+
+Vector of partial derivations will look like this (please note that partial derivation were done in wolfram alpha)
+
+\[
+\begin{eqnarray}
+{\frac{\partial f(l)}{\partial l^T}}=
+[{\frac{\partial f(l)}{\partial a}}
+{\frac{\partial f(l)}{\partial b}}
+{\frac{\partial f(l)}{\partial \gamma}}]
+\end{eqnarray} \]
+
+which after derivation gives:
+note that we derivative the cosine law function by all parts (a,b,gamma)
+
+## Derivative
+
+First by **a**:
+\[
+\begin{eqnarray}
+{\frac{a+bcos(\gamma)}{\sqrt(a^2+2abcos(\gamma)+b^2)}}
+\end{eqnarray} \]
+
+Second by **b**:
+\[
+\begin{eqnarray}
+{\frac{acos(\gamma)+b}{\sqrt(a^2+2abcos(\gamma)+b^2)}}
+\end{eqnarray} \]
+
+Third and last derivation is by gamma:
+\[
+\begin{eqnarray}
+-{\frac{absin(\gamma)}{\sqrt(a^2+2abcos(\gamma)+b^2)}}
+\end{eqnarray} \]
+
+Yes we are able to derivative even in R but the problem is i got something that is even from looking something terrible here is example of derivation done in R.
+```{r, include=TRUE}
+print(D(quote(sqrt(a^2+b^2-2*a*b*cos(g))), "a"))
+```
+Which is straight ahead something wrong so i used wolfram alpha.
+
+## Calculations of partial derivatives
+
+__Real numbers__ 
+Now that we have derivations we need to evaluate these derivatives and it is done simply by puting real numbers in. To make things a little bit easier we are gonna call derivatives by a as x, by b as y and by gamma as z.
+**A little note, R studio is working in radians so we need to convert degrees into radians.**
+So 48°38´29´´ to radians is **0.79659 rad**.
+```{r, include=FALSE}
+a=175.254
+b=193.706
+g=0.79659
+x = (a+b*cos(g))/(sqrt(a^2+2*a*b*cos(g)+b^2))
+y = (a*cos(g)+b)/(sqrt(a^2+2*a*b*cos(g)+b^2))
+z = -((a*b*sin(g))/(sqrt(a^2+2*a*b*cos(g)+b^2)))
+```
+
+```{r echo=FALSE}
+print(paste(x, "is value of partial derivation by a"))
+print(paste(y, "is value of partial derivation by b"))
+print(paste(z, "is value of partial derivation by gamma"))
+```
+
+## Error vector
+
+**Error vector**
+Now that we have partial derivations done we move on to the error counting which is simply the value we have minus value we expect. Error of a will be named Ea, of b named Eb and of gamma Eg.
+
+```{r, include=FALSE}
+a=175.254
+b=193.706
+g=0.79659
+A=round(a, digits = 2)
+B=round(b, digits = 2)
+#calculate angle by hand... not as good in R as i expect...
+Ea = round(a-A,digits = 3)
+Eb = round(b-B,digits = 3)
+Eg = 0.79645  #originally 29 seconds
+```
+
+```{r echo=FALSE}
+print(paste(Ea, "is value of error made in rounding in side a"))
+print(paste(Eb, "is value of error made in rounding in side b"))
+print(paste(29, "is value of error made in rounding in angle gamma"))
+```
+**Note that we need to put degrees into dimensionless unit so into radian second and that can be done simply by diving every degree second by Rocc.**
+\[
+\begin{eqnarray}
+Rocc=
+{\frac{180*60*60}{\pi}}
+\end{eqnarray} \]
+
+```{r, include=FALSE}
+Rocc = (180*60*60)/pi
+```
+```{r echo=FALSE}
+p = 29/Rocc
+print(paste(p, "is value of error in radian seconds"))
+```
+
+## The result
+
+Now we can finish this by simply evaluating everything.
+
+```{r include=FALSE}
+x*Ea
+y*Eb
+z*Eg
+
+```
+
+
+
+\[
+\begin{eqnarray}
+\epsilon_c=
+{\frac{\partial f(l)}{\partial l^T}}*\epsilon=
+{\frac{\partial f(l)}{\partial a}}*\epsilon_a+
+{\frac{\partial f(l)}{\partial b}}*\epsilon_b+
+{\frac{\partial f(l)}{\partial \gamma}}*\epsilon_\gamma=
+0.00365-0.00372-56.83095=
+-56.83102 
+\end{eqnarray} \]
+
+So the end error of triangle side c after rounding sides onto 2 digits and angle into minutes is -57mm.
+
+## Me
+
+**This code was brought to you by Samuel Lebó**
+
+## Referentions
+Well this is hard but the references are presentations of my profesor and my lecturer... so sory but no links for today...
